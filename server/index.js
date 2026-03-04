@@ -13,9 +13,21 @@ app.use(express.json());
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/student_portal';
 
+console.log('Attempting to connect to MongoDB...');
+// Log a masked version of the URI to check if it's being read correctly
+if (process.env.MONGODB_URI) {
+    const maskedUri = process.env.MONGODB_URI.replace(/:([^@]+)@/, ':****@');
+    console.log(`Using MONGODB_URI: ${maskedUri}`);
+} else {
+    console.log('MONGODB_URI is not set in environment variables, using local fallback.');
+}
+
 mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+    .then(() => console.log('✅ Connected to MongoDB Successfully'))
+    .catch(err => {
+        console.error('❌ MongoDB connection error details:');
+        console.error(err);
+    });
 
 // API Routes
 app.get('/api/profile', async (req, res) => {
