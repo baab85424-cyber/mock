@@ -16,12 +16,15 @@ function App() {
         if (!isAuthenticated) return;
 
         const fetchData = async () => {
-            const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            // Clean the URL: Remove trailing slashes and common mistake suffixes
+            baseUrl = baseUrl.replace(/\/+$/, '').replace(/\/api$/, '');
+
             try {
-                const profileRes = await axios.get(`${API_BASE_URL}/api/profile`);
+                const profileRes = await axios.get(`${baseUrl}/api/profile`);
                 setStudent(profileRes.data);
 
-                const resultsRes = await axios.get(`${API_BASE_URL}/api/results`);
+                const resultsRes = await axios.get(`${baseUrl}/api/results`);
                 setResults(resultsRes.data);
             } catch (err) {
                 console.error("API Error", err);
